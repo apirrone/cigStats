@@ -7,10 +7,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define CURRENCY "€"
-#define PRICE_OF_PACK 11
-#define PACKS_PER_WEEK 1
-
 typedef struct tm tm;
 
 typedef struct data{
@@ -27,7 +23,6 @@ bool checkDate(tm date){
   
   return (now-then)>0;
 }
-
 
 data readFile(char* file){
 
@@ -75,6 +70,7 @@ data readFile(char* file){
     std::cout << "ERROR : could not read file" << std::endl;
     return d;
   }
+  
 }
 
 void writeFile(data d, char* filename){
@@ -192,9 +188,9 @@ void display(char* file){
 
   int years = (int)(months/12);
   int remainingMonths = months%12;
+
   
   std::cout << "----------------------------------------" << std::endl;
-
   
   if(years>0){    
     std::cout << years;
@@ -238,10 +234,9 @@ void display(char* file){
   if(heuresDisplay>1)
     std::cout << " hours ";
   else
-    std::cout << " hour ";
-    
+    std::cout << " hour ";    
   
-  std::cout << "since last cigarette " << dateToString(d.date) << std::endl; // TODO change with real date
+  std::cout << "since last cigarette " << dateToString(d.date) << std::endl;
 
   int hoursInWeek = 24*7;
   int pricePerWeek = d.price_of_pack*d.packs_per_week;
@@ -279,7 +274,6 @@ int main(int argc, char* argv[]){
   }
 
   display(file);
-
   
   return 1;
 }

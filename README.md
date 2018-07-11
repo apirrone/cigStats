@@ -1,1 +1,4 @@
 # cigStats
+
+## build : 
+	$ make clope 

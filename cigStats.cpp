@@ -204,28 +204,34 @@ void display(char* file){
     else
       std::cout << " year, ";
 
-    
-    std::cout << remainingMonths;
-    if(remainingMonths>1)
-      std::cout << " months, ";
-    else
-      std::cout << " month, ";    
+    if(remainingMonths != 0){
+      std::cout << remainingMonths;
+      if(remainingMonths>1)
+	std::cout << " months, ";
+      else
+	std::cout << " month, ";
+    }
   }
   else{
-    std::cout << months;    
-    if(months>1)
-      std::cout << " months, ";
-    else
-      std::cout << " month, "; 
+    if(remainingMonths != 0){
+      std::cout << months;    
+      if(months>1)
+	std::cout << " months, ";
+      else
+	std::cout << " month, ";
+    }
   }
-  std::cout << remainingDays;
 
-  if(remainingDays>1)
-    std::cout << " days " ;
-  else
-    std::cout << " day " ;
+  if(remainingDays!=0){
+    std::cout << remainingDays;
+
+    if(remainingDays>1)
+      std::cout << " days " ;
+    else
+      std::cout << " day " ;
   
-  std::cout << "and ";
+    std::cout << "and ";
+  }
   
   std::cout << heuresDisplay ;
 
@@ -256,7 +262,7 @@ void usage(){
 
 int main(int argc, char* argv[]){
   
-  char* file = (char*)".cigStatsConfig"; // to avoid annoying warning (depreciated conversion from string constant to char*)
+  char* file = (char*)"~/.cigStatsConfig"; // to avoid annoying warning (depreciated conversion from string constant to char*)
   
   if(argc > 2){
     usage();

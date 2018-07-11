@@ -97,12 +97,6 @@ void writeFile(data d, char* filename){
     std::cout << "ERROR : could not write file" << std::endl;  
 }
 
-
-
-time_t getDateInSeconds(tm date){
-  return mktime(&date);
-}
-
 void setup(char* file){
 
   time_t time;
@@ -168,6 +162,11 @@ void setup(char* file){
   writeFile(d, file);
 
   std::cout << "Setup Done !" << std::endl;
+}
+
+std::string dateToString(tm date){
+
+  return ""; //TODO
 }
 
 void display(char* file){
@@ -236,10 +235,10 @@ void display(char* file){
     std::cout << " hour ";
     
   
-  std::cout << "since last cigarette (2018 may 23 at 22h)" << std::endl; // TODO change with real date
+  std::cout << "since last cigarette " << dateToString(d.date) << std::endl; // TODO change with real date
 
   int hoursInWeek = 24*7;
-  int pricePerWeek = PRICE_OF_PACK*PACKS_PER_WEEK;
+  int pricePerWeek = d.price_of_pack*d.packs_per_week;
   float pricePerHour = pricePerWeek/(hoursInWeek*1.);
   float saved = hours*pricePerHour;
 

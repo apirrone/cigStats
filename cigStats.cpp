@@ -13,21 +13,29 @@
 
 typedef struct tm tm;
 
+typedef struct data{
+  tm date;
+  int price_of_pack;
+  int packs_per_week;
+  std::string currency;
+} data;
+
+
 bool checkDate(tm date){
   int then = mktime(&date);
   time_t now = time (NULL);
-
+  
   return (now-then)>0;
 }
 
 
-tm readFile(char* file){
+data readFile(char* file){
 
-  tm date;
-    
+  data d;
+  
   if(access(file, F_OK)){// File does not exist  else
     std::cout << "ERROR : file does not exist" << std::endl;
-    return date;
+    return d;
   }
   
   std::string line;
@@ -36,39 +44,51 @@ tm readFile(char* file){
   if(myFile.is_open()){
 
     getline(myFile, line);
-    date.tm_year = atoi(line.c_str());
+    d.date.tm_year = atoi(line.c_str())-1900;
     
     getline(myFile, line);
-    date.tm_mon = atoi(line.c_str());
+    d.date.tm_mon = atoi(line.c_str())-1;
     
     getline(myFile, line);
-    date.tm_mday = atoi(line.c_str());
+    d.date.tm_mday = atoi(line.c_str());
     
     getline(myFile, line);
-    date.tm_hour = atoi(line.c_str());
+    d.date.tm_hour = atoi(line.c_str());
     
-    date.tm_min=0;
-    date.tm_sec=0;
+    d.date.tm_min=0;
+    d.date.tm_sec=0;
+
+    getline(myFile, line);
+    d.price_of_pack = atoi(line.c_str());
+
+    getline(myFile, line);
+    d.packs_per_week = atoi(line.c_str());
+
+    getline(myFile, line);
+    d.currency = line.c_str();
     
     myFile.close();
-    return date;
+    return d;
     
   }
   else{
     std::cout << "ERROR : could not read file" << std::endl;
-    return date;
+    return d;
   }
 }
 
-void writeFile(tm date, char* filename){
-
+void writeFile(data d, char* filename){
+  
   std::ofstream myFile(filename);
   if(myFile.is_open()){
     
-    myFile << date.tm_year << "\n";
-    myFile << date.tm_mon  << "\n";
-    myFile << date.tm_mday << "\n";
-    myFile << date.tm_hour << "\n";    
+    myFile << d.date.tm_year+1900 << "\n";
+    myFile << d.date.tm_mon+1  << "\n";
+    myFile << d.date.tm_mday << "\n";
+    myFile << d.date.tm_hour << "\n";
+    myFile << d.price_of_pack << "\n";
+    myFile << d.packs_per_week << "\n";
+    myFile << d.currency << "\n";
     
     myFile.close();
     
@@ -86,48 +106,79 @@ time_t getDateInSeconds(tm date){
 void setup(char* file){
 
   time_t time;
-  tm date;
+  
+  data d;
+  
   int input;
   bool dateOk = false;
-  
+
+  //TODO check inputs (month between 0 and 12 etc)
   do{
     
-    puts("Year ? : ");
+    std::cout << "Year ?" << std::endl;
+    std::cout << ">";
     scanf("%d", &input);
-    date.tm_year=input-1900;
+    d.date.tm_year=input-1900;
 
-    puts("Month ? : ");
+    std::cout << "Month ?" << std::endl;
+    std::cout << ">";
     scanf("%d", &input);
-    date.tm_mon=input-1;
+    d.date.tm_mon=input-1;
 
-    puts("Day ? : ");
+
+    std::cout << "Day ?" << std::endl;
+    std::cout << ">";
     scanf("%d", &input);
-    date.tm_mday=input;
+    d.date.tm_mday=input;
 
-    puts("Hour ? : ");
+    std::cout << "Hour ?" << std::endl;
+    std::cout << ">";
     scanf("%d", &input);
-    date.tm_hour=input;
+    d.date.tm_hour=input;
 
-    date.tm_min=0;
-    date.tm_sec=0;
+    d.date.tm_min=0;
+    d.date.tm_sec=0;
 
-    dateOk = checkDate(date);
+    dateOk = checkDate(d.date);
     
     if(!dateOk)
       std::cout << "Invalid date ! The date entered cannot be in the future" << std::endl;
     
   } while(!dateOk);
-    
-  writeFile(date, file);
+
+
+  std::cout << "Price of pack ?" << std::endl;
+  std::cout << ">";
+  scanf("%d", &input);
+  d.price_of_pack=input;
+
+  std::cout << "Packs per week ?" << std::endl;
+  std::cout << ">";
+  scanf("%d", &input);
+  d.packs_per_week=input;
+
+
+  std::string strInput = "";
+  std::cout << "Currency ?" << std::endl;
+  std::cout << ">";
+  while(strInput == "")
+    getline(std::cin, strInput);
+  d.currency = strInput;
+  
+  writeFile(d, file);
 
   std::cout << "Setup Done !" << std::endl;
 }
 
 void display(char* file){
+  
+  data d = readFile(file);
+  
+  tm date = d.date;
+  
   std::cout << std::fixed;
   std::cout << std::setprecision(2);
   
-  tm date = readFile(file);  
   int start = mktime(&date); // date in seconds elapsed since epoch
   time_t seconds = time (NULL);
   
@@ -185,14 +236,14 @@ void display(char* file){
     std::cout << " hour ";
     
   
-  std::cout << "since last cigarette (2018 may 23 at 22h)" << std::endl;
+  std::cout << "since last cigarette (2018 may 23 at 22h)" << std::endl; // TODO change with real date
 
   int hoursInWeek = 24*7;
   int pricePerWeek = PRICE_OF_PACK*PACKS_PER_WEEK;
   float pricePerHour = pricePerWeek/(hoursInWeek*1.);
   float saved = hours*pricePerHour;
 
-  std::cout << saved << CURRENCY << " saved " << std::endl;
+  std::cout << saved << " " << d.currency << " saved " << std::endl;
 
   
   std::cout << "----------------------------------------" << std::endl;  

@@ -24,7 +24,7 @@ bool checkDate(tm date){
   return (now-then)>0;
 }
 
-data readFile(char* file){
+data readFile(const char* file){
 
   data d;
   
@@ -73,7 +73,7 @@ data readFile(char* file){
   
 }
 
-void writeFile(data d, char* filename){
+void writeFile(data d, const char* filename){
   
   std::ofstream myFile(filename);
   if(myFile.is_open()){
@@ -93,7 +93,7 @@ void writeFile(data d, char* filename){
     std::cout << "ERROR : could not write file" << std::endl;  
 }
 
-void setup(char* file){
+void setup(const char* file){
 
   time_t time;
   
@@ -165,7 +165,7 @@ std::string dateToString(tm date){
   return ""; //TODO
 }
 
-void display(char* file){
+void display(const char* file){
   
   data d = readFile(file);
   
@@ -245,6 +245,7 @@ void display(char* file){
 
   std::cout << saved << " " << d.currency << " saved " << std::endl;
 
+  std::cout << "You don't need to smoke, it won't relax you, you won't be more focused, and you will want to smoke tomorrow again" << std::endl;
   
   std::cout << "----------------------------------------" << std::endl;  
 }
@@ -257,7 +258,9 @@ void usage(){
 
 int main(int argc, char* argv[]){
   
-  char* file = (char*)"~/.cigStatsConfig"; // to avoid annoying warning (depreciated conversion from string constant to char*)
+  std::string homepath = getenv("HOME");
+  std::string fullpath = homepath+"/.cigStatsConfig";
+  const char* file = fullpath.c_str();
   
   if(argc > 2){
     usage();

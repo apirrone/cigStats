@@ -248,7 +248,7 @@ void display(const char* file){
   else
     std::cout << " hour ";    
   
-  std::cout << "since last cigarette " << dateToString(d.date) << std::endl;
+  std::cout << "since last cigarette " << dateToString(d.date) << std::endl; // TODO display date
 
   int hoursInWeek = 24*7;
   int pricePerWeek = d.price_of_pack*d.packs_per_week;

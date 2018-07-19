@@ -14,6 +14,7 @@ typedef struct data{
   int price_of_pack;
   int packs_per_week;
   std::string currency;
+  std::string message;
 } data;
 
 
@@ -61,6 +62,9 @@ data readFile(const char* file){
 
     getline(myFile, line);
     d.currency = line.c_str();
+
+    getline(myFile, line);
+    d.message = line.c_str();
     
     myFile.close();
     return d;
@@ -85,6 +89,7 @@ void writeFile(data d, const char* filename){
     myFile << d.price_of_pack << "\n";
     myFile << d.packs_per_week << "\n";
     myFile << d.currency << "\n";
+    myFile << d.message << "\n";
     
     myFile.close();
     
@@ -154,6 +159,13 @@ void setup(const char* file){
   while(strInput == "")
     getline(std::cin, strInput);
   d.currency = strInput;
+
+  strInput = "";
+  std::cout << "Add custom message ? (leave empty if you don't want to)" << std::endl;
+  std::cout << ">";
+  while(strInput == "")
+    getline(std::cin, strInput);
+  d.message = strInput;
   
   writeFile(d, file);
 
@@ -243,9 +255,9 @@ void display(const char* file){
   float pricePerHour = pricePerWeek/(hoursInWeek*1.);
   float saved = hours*pricePerHour;
 
-  std::cout << saved << " " << d.currency << " saved " << std::endl;
+  std::cout << saved << " " << d.currency << " saved !" << std::endl;
 
-  std::cout << "You don't need to smoke, it won't relax you, you won't be more focused, and you will want to smoke tomorrow again" << std::endl;
+  std::cout << d.message << std::endl;
   
   std::cout << "----------------------------------------" << std::endl;  
 }

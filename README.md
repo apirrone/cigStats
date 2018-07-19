@@ -7,6 +7,6 @@ I quit smoking, I had to think about something else (keeping myself busy) for a 
 	
 	
 ## Setup :
-	run ./cigStats --setup
+	$ ./cigStats --setup
 	
 	
